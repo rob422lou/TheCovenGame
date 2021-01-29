@@ -12,6 +12,7 @@ ATheCovenPlayerState::ATheCovenPlayerState(const FObjectInitializer& ObjectIniti
 
 void ATheCovenPlayerState::UpdatePlayerPawn()
 {
+	/*
 	if (GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("UpdatePlayerPawn()"));
 	
@@ -72,6 +73,7 @@ void ATheCovenPlayerState::UpdatePlayerPawn()
 		if (GEngine)
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Ghost21"));
 	}
+	*/
 }
 
 void ATheCovenPlayerState::ClientInitialize(AController* InController)

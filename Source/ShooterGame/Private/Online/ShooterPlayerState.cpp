@@ -101,68 +101,7 @@ void AShooterPlayerState::UpdateTeamColors()
 		AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(OwnerController->GetCharacter());
 		if (ShooterCharacter != NULL)
 		{
-			//ShooterCharacter->UpdateTeamColorsAllMIDs();
-
-			if (GEngine)
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("UpdatePlayerPawn()"));
-
-			AShooterPlayerController* PC = (AShooterPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 0);
-			if (!PC) {
-				return;
-			}
-
-			if (GetTeamNum() == 0) {
-				if (GEngine)
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Witch1"));
-
-				//Witch	
-				auto* cls = StaticLoadObject(UObject::StaticClass(), nullptr, TEXT("/Game/Blueprints/Pawns/TheCovenGhostPlayerPawn"));
-				if (!cls) {
-					if (GEngine)
-						GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Witch1.5"));
-					return;
-				}
-				UBlueprint* bp = Cast<UBlueprint>(cls);
-				if (!bp) {
-					return;
-				}
-				//AShooterPlayerController* PC = (AShooterPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 0);
-				if (!PC) {
-					return;
-				}
-				PC->UnPossess();
-				TSubclassOf<class UObject> MyItemBlueprint;
-				MyItemBlueprint = (UClass*)bp->GeneratedClass;
-
-				FActorSpawnParameters SpawnParams;
-				APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(MyItemBlueprint, { 0, 0, 0 }, { 0, 0, 0 }, SpawnParams);
-				PC->Possess(NewCharacter);
-				if (GEngine)
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Witch2"));
-			}
-			else {
-				if (GEngine)
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Ghost11"));
-				//Ghost
-				auto cls = StaticLoadObject(UObject::StaticClass(), nullptr, TEXT("/Game/Blueprints/Pawns/TheCovenWitchPlayerPawn"));
-				if (!cls) {
-					return;
-				}
-				UBlueprint* bp = Cast<UBlueprint>(cls);
-				if (!bp) {
-					return;
-				}
-				PC->UnPossess();
-				TSubclassOf<class UObject> MyItemBlueprint;
-				MyItemBlueprint = (UClass*)bp->GeneratedClass;
-
-				FActorSpawnParameters SpawnParams;
-				APawn* NewCharacter = GetWorld()->SpawnActor<APawn>(MyItemBlueprint, { 0, 0, 0 }, { 0, 0, 0 }, SpawnParams);
-				PC->Possess(NewCharacter);
-
-				if (GEngine)
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Ghost21"));
-			}
+			ShooterCharacter->UpdateTeamColorsAllMIDs();
 		}
 	}
 }
