@@ -12,6 +12,11 @@
 UCLASS()
 class SHOOTERGAME_API ATheCovenCharacter : public AShooterCharacter
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
+public:
+	UPROPERTY(EditDefaultsOnly, Category = Inventory)
+	bool bIsThirdPerson = false;
+
+	virtual void OnCameraUpdate(const FVector& CameraLocation, const FRotator& CameraRotation) override;
 };

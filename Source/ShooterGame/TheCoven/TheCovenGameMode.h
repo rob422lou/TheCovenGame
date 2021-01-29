@@ -27,7 +27,14 @@ public:
 	TSubclassOf<APawn> GhostPawnClass;
 
 	virtual void StartPlay() override;
+
+	// Overridden from GamemodeBase class
 	virtual void RestartPlayer(AController* NewPlayer) override;
 
 	void UpdatePlayerPawns(ATheCovenPlayerController* PC);
+
+////////////////////////////////////////////////////////////////
+// ShooterGame overrides
+public:
+	virtual int32 ChooseTeam(AShooterPlayerState* ForPlayerState) const;
 };

@@ -29,8 +29,9 @@ protected:
 	/** best team */
 	int32 WinnerTeam;
 
+	// @TheCoven - We need this so we can balance the teams, 4v1
 	/** pick team with least players in or random when it's equal */
-	int32 ChooseTeam(AShooterPlayerState* ForPlayerState) const;
+	virtual int32 ChooseTeam(AShooterPlayerState* ForPlayerState) const;
 
 	/** check who won */
 	virtual void DetermineMatchWinner() override;

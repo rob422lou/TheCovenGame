@@ -45,7 +45,8 @@ class AShooterCharacter : public ACharacter
 	*	@param	CameraLocation	Location of the Camera.
 	*	@param	CameraRotation	Rotation of the Camera.
 	*/
-	void OnCameraUpdate(const FVector& CameraLocation, const FRotator& CameraRotation);
+	// @TheCoven - Needed to change this for Third Person camera
+	virtual void OnCameraUpdate(const FVector& CameraLocation, const FRotator& CameraRotation);
 
 	/** get aim offsets */
 	UFUNCTION(BlueprintCallable, Category = "Game|Weapon")

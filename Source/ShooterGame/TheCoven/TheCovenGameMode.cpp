@@ -80,3 +80,41 @@ void ATheCovenGameMode::UpdatePlayerPawns(ATheCovenPlayerController* PC)
 
 	}
 }
+
+int32 ATheCovenGameMode::ChooseTeam(AShooterPlayerState* ForPlayerState) const
+{
+	// Team 0 are the Witches, Team 1 is the Ghost/Wraith
+
+	TArray<int32> TeamBalance;
+	TeamBalance.AddZeroed(NumTeams);
+
+	// get current team balance
+	for (int32 i = 0; i < GameState->PlayerArray.Num(); i++)
+	{
+		AShooterPlayerState const* const TestPlayerState = Cast<AShooterPlayerState>(GameState->PlayerArray[i]);
+
+		if (TestPlayerState && TestPlayerState != ForPlayerState && TeamBalance.IsValidIndex(TestPlayerState->GetTeamNum()))
+		{
+			TeamBalance[TestPlayerState->GetTeamNum()]++;
+		}
+	}
+
+	const int32 RandomBestTeam = FMath::RandHelper(TeamBalance.Num());
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("RandomBestTeam: %lld"), RandomBestTeam));
+	if (RandomBestTeam == 1) {
+		if (TeamBalance[1] == 0)
+		{
+			// Assign to Ghost
+			return 1;
+		}
+	}
+
+	if (TeamBalance[1] == 0 && TeamBalance[0] == 1)
+	{
+		// Need at least 1 Ghost
+		return 1;
+	}
+
+	// Assign to Witch
+	return 0;
+}
