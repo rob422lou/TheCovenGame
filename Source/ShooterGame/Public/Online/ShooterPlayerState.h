@@ -31,7 +31,7 @@ class AShooterPlayerState : public APlayerState
 	 *
 	 * @param	NewTeamNumber	Team we want to be on.
 	 */
-	void SetTeamNum(int32 NewTeamNumber);
+	virtual void SetTeamNum(int32 NewTeamNumber);
 
 	/** player killed someone */
 	void ScoreKill(AShooterPlayerState* Victim, int32 Points);
@@ -73,7 +73,7 @@ class AShooterPlayerState : public APlayerState
 
 	/** replicate team colors. Updated the players mesh colors appropriately */
 	UFUNCTION()
-	void OnRep_TeamColor();
+	virtual void OnRep_TeamColor();
 
 	//We don't need stats about amount of ammo fired to be server authenticated, so just increment these with local functions
 	void AddBulletsFired(int32 NumBullets);

@@ -13,5 +13,5 @@ UCLASS()
 class SHOOTERGAME_API ATheCovenCharacter : public AShooterCharacter
 {
 	GENERATED_BODY()
-	
+
 };
