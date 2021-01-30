@@ -18,4 +18,7 @@ class SHOOTERGAME_API ATheCovenHUD : public AShooterHUD
 
 	/** Temporary helper for drawing text-in-a-box. */
 	void DrawDebugInfoString(const FString& Text, float PosX, float PosY, bool bAlignLeft, bool bAlignTop, const FColor& TextColor);
+
+	virtual void DrawHealth();
+	void DrawTimer();
 };

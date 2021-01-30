@@ -324,7 +324,8 @@ protected:
 	void DrawKills();
 
 	/** Draw player's health bar. */
-	void DrawHealth();
+	// @TheCoven
+	virtual void DrawHealth();
 
 	/** Draws match timer and player position. */
 	void DrawMatchTimerAndPosition();

@@ -37,4 +37,7 @@ public:
 // ShooterGame overrides
 public:
 	virtual int32 ChooseTeam(AShooterPlayerState* ForPlayerState) const;
+
+	/** update remaining time */
+	virtual void DefaultTimer() override;
 };

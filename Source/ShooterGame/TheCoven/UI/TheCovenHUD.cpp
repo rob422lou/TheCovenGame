@@ -3,6 +3,8 @@
 #include "ShooterGame.h"
 #include "Misc/NetworkVersion.h"
 #include "Net/UnrealNetwork.h"
+#include "../Player/TheCovenCharacter.h"
+#include "../Player/TheCovenPlayerController.h"
 #include "TheCoven/UI/TheCovenHUD.h"
 
 
@@ -23,13 +25,13 @@ void ATheCovenHUD::DrawHUD()
 	InfoItems.Empty();
 	float TextScale = 1.0f;
 	ScaleUI = FMath::Max(ScaleUI, MinHudScale);
-	/*
-	APerdixCharacter* MyPawn = Cast<APerdixCharacter>(GetOwningPawn());
+
+	ATheCovenCharacter* MyPawn = Cast<ATheCovenCharacter>(GetOwningPawn());
 
 	float MessageOffset = (Canvas->ClipY / 4.0) * ScaleUI;
 	if (MatchState == EShooterMatchState::Playing)
 	{
-		AShooterPlayerController* MyPC = Cast<AShooterPlayerController>(PlayerOwner);
+		ATheCovenPlayerController* MyPC = Cast<ATheCovenPlayerController>(PlayerOwner);
 		if (MyPC)
 		{
 			// PERDIX
@@ -38,8 +40,10 @@ void ATheCovenHUD::DrawHUD()
 
 		if (MyPawn && MyPawn->IsAlive())
 		{
-			//DrawHealth();
+			DrawHealth();
 			//DrawWeaponHUD();
+
+			DrawTimer();
 		}
 		else
 		{
@@ -127,7 +131,6 @@ void ATheCovenHUD::DrawHUD()
 
 	// Render the info messages such as wating to respawn - these will be drawn below any 'killed player' message.
 	ShowInfoItems(MessageOffset, 1.0f);
-	*/
 }
 
 void ATheCovenHUD::DrawDebugInfoString(const FString& Text, float PosX, float PosY, bool bAlignLeft, bool bAlignTop, const FColor& TextColor)
@@ -158,6 +161,50 @@ void ATheCovenHUD::DrawDebugInfoString(const FString& Text, float PosX, float Po
 	TextItem.Scale = FVector2D(ScaleUI, ScaleUI);
 	Canvas->DrawItem(TextItem);
 #endif
+}
+
+void ATheCovenHUD::DrawHealth()
+{
+	ATheCovenCharacter* MyPawn = Cast<ATheCovenCharacter>(GetOwningPawn());
+	//Canvas->SetDrawColor(FColor::White);
+	const float HealthPosX = (Canvas->ClipX - HealthBarBg.UL * ScaleUI) / 2;
+	const float HealthPosY = Canvas->ClipY - (Offset + HealthBarBg.VL) * ScaleUI;
+	//Canvas->DrawIcon(HealthBarBg, HealthPosX, HealthPosY, ScaleUI);
+	const float HealthAmount = FMath::Min(1.0f, MyPawn->Health / MyPawn->GetMaxHealth());
+	/*
+	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.Texture->Resource,
+		FVector2D(HealthBar.UL * HealthAmount * ScaleUI, HealthBar.VL * ScaleUI), FLinearColor::White);
+	MakeUV(HealthBar, TileItem.UV0, TileItem.UV1, HealthBar.U, HealthBar.V, HealthBar.UL * HealthAmount, HealthBar.VL);
+	TileItem.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TileItem);
+
+	Canvas->DrawIcon(HealthIcon, HealthPosX + Offset * ScaleUI, HealthPosY + (HealthBar.VL - HealthIcon.VL) / 2.0f * ScaleUI, ScaleUI);
+	*/
+	DrawText("Health: " + FString::FromInt(MyPawn->Health), FLinearColor::White, HealthPosX + Offset * ScaleUI, HealthPosY + (HealthBar.VL - HealthIcon.VL) / 2.0f * ScaleUI, BigFont, ScaleUI, false);
+}
+
+void ATheCovenHUD::DrawTimer()
+{
+	ATheCovenCharacter* MyPawn = Cast<ATheCovenCharacter>(GetOwningPawn());
+	//Canvas->SetDrawColor(FColor::White);
+	const float HealthPosX = (Canvas->ClipX - HealthBarBg.UL * ScaleUI) / 2;
+	const float HealthPosY = Canvas->ClipY - (Offset + HealthBarBg.VL) * ScaleUI;
+	//Canvas->DrawIcon(HealthBarBg, HealthPosX, HealthPosY, ScaleUI);
+	//const float HealthAmount = FMath::Min(1.0f, MyPawn->Health / MyPawn->GetMaxHealth());
+	/*
+	FCanvasTileItem TileItem(FVector2D(HealthPosX, HealthPosY), HealthBar.Texture->Resource,
+		FVector2D(HealthBar.UL * HealthAmount * ScaleUI, HealthBar.VL * ScaleUI), FLinearColor::White);
+	MakeUV(HealthBar, TileItem.UV0, TileItem.UV1, HealthBar.U, HealthBar.V, HealthBar.UL * HealthAmount, HealthBar.VL);
+	TileItem.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TileItem);
+
+	Canvas->DrawIcon(HealthIcon, HealthPosX + Offset * ScaleUI, HealthPosY + (HealthBar.VL - HealthIcon.VL) / 2.0f * ScaleUI, ScaleUI);
+	*/
+	AShooterGameState* const MyGameState = GetWorld()->GetGameState<AShooterGameState>();
+	if (MyGameState && MyGameState->RemainingTime > 0)
+	{
+		DrawText("Timer: " + FString::FromInt(MyGameState->RemainingTime), FLinearColor::White, 5, HealthPosY + (HealthBar.VL - HealthIcon.VL) / 2.0f * ScaleUI, BigFont, ScaleUI, false);
+	}
 }
 
 #undef LOCTEXT_NAMESPACE

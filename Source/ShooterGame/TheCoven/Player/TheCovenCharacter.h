@@ -52,6 +52,34 @@ public:
 	UFUNCTION(WithValidation, Server, Reliable)
 	void ServerOnStopUse();
 
+	/** player pressed 1 key */
+	UFUNCTION(BlueprintNativeEvent, Category = PlayerAbility)
+	void OnSkillOneUse();
+
+	UFUNCTION(WithValidation, Server, Reliable)
+	void ServerOnSkillOneUse();
+
+	/** player pressed 1 key */
+	UFUNCTION(BlueprintNativeEvent, Category = PlayerAbility)
+	void OnSkillTwoUse();
+
+	UFUNCTION(WithValidation, Server, Reliable)
+	void ServerOnSkillTwoUse();
+
+	/** player pressed 1 key */
+	UFUNCTION(BlueprintNativeEvent, Category = PlayerAbility)
+	void OnSkillThreeUse();
+
+	UFUNCTION(WithValidation, Server, Reliable)
+	void ServerOnSkillThreeUse();
+
+	/** player pressed 1 key */
+	UFUNCTION(BlueprintNativeEvent, Category = PlayerAbility)
+	void OnSkillFourUse();
+
+	UFUNCTION(WithValidation, Server, Reliable)
+	void ServerOnSkillFourUse();
+
 	/* True only in first frame when focused on new usable actor. */
 	bool bHasNewFocus;
 

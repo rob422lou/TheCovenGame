@@ -118,3 +118,57 @@ int32 ATheCovenGameMode::ChooseTeam(AShooterPlayerState* ForPlayerState) const
 	// Assign to Witch
 	return 0;
 }
+
+void ATheCovenGameMode::DefaultTimer()
+{
+	// don't update timers for Play In Editor mode, it's not real match
+	AShooterGameState* const MyGameState = Cast<AShooterGameState>(GameState);
+	if (GetWorld()->IsPlayInEditor())
+	{
+		if (MyGameState && MyGameState->RemainingTime > 0 && !MyGameState->bTimerPaused)
+		{
+			MyGameState->RemainingTime--;
+		}
+		// start match if necessary.
+		if (GetMatchState() == MatchState::WaitingToStart)
+		{
+			StartMatch();
+		}
+		return;
+	}
+
+	if (MyGameState && MyGameState->RemainingTime > 0 && !MyGameState->bTimerPaused)
+	{
+		MyGameState->RemainingTime--;
+
+		if (MyGameState->RemainingTime <= 0)
+		{
+			if (GetMatchState() == MatchState::WaitingPostMatch)
+			{
+				RestartGame();
+			}
+			else if (GetMatchState() == MatchState::InProgress)
+			{
+				FinishMatch();
+
+				// Send end round events
+				for (FConstControllerIterator It = GetWorld()->GetControllerIterator(); It; ++It)
+				{
+					AShooterPlayerController* PlayerController = Cast<AShooterPlayerController>(*It);
+
+					if (PlayerController && MyGameState)
+					{
+						AShooterPlayerState* PlayerState = Cast<AShooterPlayerState>((*It)->PlayerState);
+						const bool bIsWinner = IsWinner(PlayerState);
+
+						PlayerController->ClientSendRoundEndEvent(bIsWinner, MyGameState->ElapsedTime);
+					}
+				}
+			}
+			else if (GetMatchState() == MatchState::WaitingToStart)
+			{
+				StartMatch();
+			}
+		}
+	}
+}

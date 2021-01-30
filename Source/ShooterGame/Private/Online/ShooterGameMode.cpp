@@ -83,6 +83,7 @@ void AShooterGameMode::PreInitializeComponents()
 void AShooterGameMode::DefaultTimer()
 {
 	// don't update timers for Play In Editor mode, it's not real match
+
 	if (GetWorld()->IsPlayInEditor())
 	{
 		// start match if necessary.
