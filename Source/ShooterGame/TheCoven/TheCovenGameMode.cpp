@@ -21,6 +21,8 @@ ATheCovenGameMode::ATheCovenGameMode(const FObjectInitializer& ObjectInitializer
 	//GameStateClass = ATheCovenGameState::StaticClass();
 	HUDClass = ATheCovenHUD::StaticClass();
 
+	PlayerControllerClass = ATheCovenPlayerController::StaticClass();
+
 	bAllowBots = false;
 	MinRespawnDelay = 2.0f;
 }

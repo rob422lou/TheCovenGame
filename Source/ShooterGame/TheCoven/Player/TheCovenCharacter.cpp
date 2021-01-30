@@ -273,3 +273,172 @@ bool ATheCovenCharacter::ServerOnSkillFourUse_Validate()
 	// No special server-side validation performed.
 	return true;
 }
+/*
+void ATheCovenCharacter::SetHidden_Implementation()
+{
+
+	if (GetLocalRole() < ROLE_Authority) {
+		ServerSetHidden();
+	}
+
+	//GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void ATheCovenCharacter::ServerSetHidden_Implementation()
+{
+	//SetHidden();
+}
+
+bool ATheCovenCharacter::ServerSetHidden_Validate()
+{
+	// No special server-side validation performed.
+	return true;
+}
+*/
+/*
+void ATheCovenCharacter::SetHidden_Implementation(bool bIsHidden)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("ClientSetHidden_Implementation"));
+
+	if (bIsHidden) {
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		GetMesh()->SetVisibility(false);
+		
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetMesh()->SetVisibility(true);
+	}
+}
+*/
+/*
+void ATheCovenCharacter::SetHidden(bool bIsHidden) {
+	if (GetLocalRole() < ROLE_Authority)
+	{
+		ServerSetHidden(bIsHidden);
+	}
+
+	if (GetLocalRole() == ROLE_Authority) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, TEXT("Server: SetHidden_Implementation"));
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Blue, TEXT("Client: SetHidden_Implementation"));
+	}
+
+	if (bIsHidden) {
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		//GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		GetMesh()->SetVisibility(false);
+
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetMesh()->SetVisibility(true);
+	}
+
+}
+
+void ATheCovenCharacter::ServerSetHidden_Implementation(bool bIsHidden) {
+	if (GetLocalRole() == ROLE_Authority) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Server: ServerSetHidden_Implementation"));
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Client: ServerSetHidden_Implementation"));
+	}
+
+	SetHidden(bIsHidden);
+
+	if (bIsHidden) {
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		//GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		GetMesh()->SetVisibility(false);
+
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetMesh()->SetVisibility(true);
+	}
+
+}
+*/
+/*
+void ATheCovenCharacter::SetHidden(bool bIsHidden)
+{
+	if (GetLocalRole() < ROLE_Authority)
+	{
+		ServerSetHidden(bIsHidden);
+	}
+
+	if (GetLocalRole() == ROLE_Authority) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Server: ServerSetHidden_Implementation"));
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Client: ServerSetHidden_Implementation"));
+	}
+
+	if (bIsHidden) {
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		//GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		GetMesh()->SetVisibility(false);
+
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetMesh()->SetVisibility(true);
+	}
+}
+
+bool ATheCovenCharacter::ServerSetHidden_Validate(bool bIsHidden)
+{
+	return true;
+}
+
+void ATheCovenCharacter::ServerSetHidden_Implementation(bool bIsHidden)
+{
+	SetHidden(bIsHidden);
+}
+*/
+
+ATheCovenPlayerController* ATheCovenCharacter::GetTheCovenPlayerController()
+{
+	return Cast<ATheCovenPlayerController>(Controller);
+}
+
+void ATheCovenCharacter::SetHidden()
+{
+	if (GetLocalRole() == ROLE_Authority) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Server: ServerSetHidden_Implementation"));
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Client: ServerSetHidden_Implementation"));
+	}
+
+	if (bIsHidden) {
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetMesh()->SetVisibility(false);
+
+	}
+	else
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GetMesh()->SetVisibility(true);
+	}
+}
+
+void ATheCovenCharacter::OnRep_SetHidden()
+{
+	SetHidden();
+}
+
+void ATheCovenCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to everyone
+	DOREPLIFETIME(ATheCovenCharacter, bIsHidden);
+}
