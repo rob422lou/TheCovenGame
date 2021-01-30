@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "../Actors/TheCovenActor.h"
 #include "Player/ShooterCharacter.h"
+#include "TheCovenPlayerController.h"
 #include "TheCovenCharacter.generated.h"
 
 /**
@@ -26,6 +27,9 @@ public:
 	bool bIsThirdPerson = false;
 
 	virtual void OnCameraUpdate(const FVector& CameraLocation, const FRotator& CameraRotation) override;
+
+	UFUNCTION(BlueprintCallable)
+	ATheCovenPlayerController* GetTheCovenPlayerController();
 
 //////////////////////////////////////////////////////////////////////////
 // Input handlers
@@ -85,4 +89,13 @@ public:
 
 	/* Actor derived from UsableActor currently in center-view. */
 	ATheCovenActor* FocusedUsableActor;
+
+	UFUNCTION(BlueprintCallable)
+	void SetHidden();
+	
+	UFUNCTION()
+	void OnRep_SetHidden();
+
+	UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_SetHidden)
+	bool bIsHidden;
 };

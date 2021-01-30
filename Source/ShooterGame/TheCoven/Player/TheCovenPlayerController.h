@@ -14,4 +14,10 @@ class SHOOTERGAME_API ATheCovenPlayerController : public AShooterPlayerControlle
 {
 	GENERATED_BODY()
 	
+	UFUNCTION(BlueprintCallable)
+	virtual void SetHidden(bool bIsHidden);
+
+	/** update targeting state */
+	UFUNCTION(reliable, server, WithValidation)
+	void ServerSetHidden(bool bIsHidden);
 };
