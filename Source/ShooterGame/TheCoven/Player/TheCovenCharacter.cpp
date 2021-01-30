@@ -81,6 +81,10 @@ void ATheCovenCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	//PlayerInputComponent->BindAction("Noclip", IE_Pressed, this, &APerdixCharacter::Noclip);
 	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &ATheCovenCharacter::OnStartUse);
 	PlayerInputComponent->BindAction("Use", IE_Released, this, &ATheCovenCharacter::OnStopUse);
+	PlayerInputComponent->BindAction("SkillOne", IE_Pressed, this, &ATheCovenCharacter::OnSkillOneUse);
+	PlayerInputComponent->BindAction("SkillTwo", IE_Pressed, this, &ATheCovenCharacter::OnSkillTwoUse);
+	PlayerInputComponent->BindAction("SkillThree", IE_Pressed, this, &ATheCovenCharacter::OnSkillThreeUse);
+	PlayerInputComponent->BindAction("SkillFour", IE_Pressed, this, &ATheCovenCharacter::OnSkillFourUse);
 	//PlayerInputComponent->BindAction("QuickMenu", IE_Pressed, this, &APerdixCharacter::OnStartQuickMenu);
 	//PlayerInputComponent->BindAction("QuickMenu", IE_Released, this, &APerdixCharacter::OnStopQuickMenu);
 
@@ -190,6 +194,81 @@ void ATheCovenCharacter::ServerOnStopUse_Implementation()
 }
 
 bool ATheCovenCharacter::ServerOnStopUse_Validate()
+{
+	// No special server-side validation performed.
+	return true;
+}
+
+///////////////////////////////////////////////////////////////////////
+// Skills
+
+void ATheCovenCharacter::OnSkillOneUse_Implementation()
+{
+	if (GetLocalRole() < ROLE_Authority) {
+		ServerOnSkillOneUse();
+	}
+}
+
+void ATheCovenCharacter::ServerOnSkillOneUse_Implementation()
+{
+	OnSkillOneUse();
+}
+
+bool ATheCovenCharacter::ServerOnSkillOneUse_Validate()
+{
+	// No special server-side validation performed.
+	return true;
+}
+
+void ATheCovenCharacter::OnSkillTwoUse_Implementation()
+{
+	if (GetLocalRole() < ROLE_Authority) {
+		ServerOnSkillTwoUse();
+	}
+}
+
+void ATheCovenCharacter::ServerOnSkillTwoUse_Implementation()
+{
+	OnSkillTwoUse();
+}
+
+bool ATheCovenCharacter::ServerOnSkillTwoUse_Validate()
+{
+	// No special server-side validation performed.
+	return true;
+}
+
+void ATheCovenCharacter::OnSkillThreeUse_Implementation()
+{
+	if (GetLocalRole() < ROLE_Authority) {
+		ServerOnSkillThreeUse();
+	}
+}
+
+void ATheCovenCharacter::ServerOnSkillThreeUse_Implementation()
+{
+	OnSkillThreeUse();
+}
+
+bool ATheCovenCharacter::ServerOnSkillThreeUse_Validate()
+{
+	// No special server-side validation performed.
+	return true;
+}
+
+void ATheCovenCharacter::OnSkillFourUse_Implementation()
+{
+	if (GetLocalRole() < ROLE_Authority) {
+		ServerOnSkillFourUse();
+	}
+}
+
+void ATheCovenCharacter::ServerOnSkillFourUse_Implementation()
+{
+	OnSkillFourUse();
+}
+
+bool ATheCovenCharacter::ServerOnSkillFourUse_Validate()
 {
 	// No special server-side validation performed.
 	return true;
