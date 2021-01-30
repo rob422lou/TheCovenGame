@@ -21,4 +21,6 @@ class SHOOTERGAME_API ATheCovenHUD : public AShooterHUD
 
 	virtual void DrawHealth();
 	void DrawTimer();
+
+	virtual bool ShowScoreboard(bool bEnable, bool bFocus = false);
 };

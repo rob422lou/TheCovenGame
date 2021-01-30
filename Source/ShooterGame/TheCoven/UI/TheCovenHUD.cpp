@@ -29,6 +29,27 @@ void ATheCovenHUD::DrawHUD()
 	ATheCovenCharacter* MyPawn = Cast<ATheCovenCharacter>(GetOwningPawn());
 
 	float MessageOffset = (Canvas->ClipY / 4.0) * ScaleUI;
+
+	if (bIsScoreBoardVisible)
+	{
+		FString Text;
+		if (GetMatchState() == EShooterMatchState::Lost)
+		{
+			Text = LOCTEXT("LoseState", "YOU LOSE! ").ToString();
+		}
+		else {
+			Text = LOCTEXT("WinState", "YOU WIN!").ToString();
+		}
+
+		FCanvasTextItem TextItem(FVector2D::ZeroVector, FText::GetEmpty(), BigFont, HUDDark);
+		TextItem.EnableShadow(FLinearColor::Black);
+		TextItem.Text = FText::FromString(Text);
+		TextItem.Scale = FVector2D(TextScale * ScaleUI, TextScale * ScaleUI);
+		TextItem.FontRenderInfo = ShadowedFont;
+		TextItem.SetColor(FLinearColor::Red);
+		AddMatchInfoString(TextItem);
+	}
+
 	if (MatchState == EShooterMatchState::Playing)
 	{
 		ATheCovenPlayerController* MyPC = Cast<ATheCovenPlayerController>(PlayerOwner);
@@ -48,13 +69,13 @@ void ATheCovenHUD::DrawHUD()
 		else
 		{
 			// respawn
-			FString Text = LOCTEXT("WaitingForRespawn", "WAITING FOR RESPAWN").ToString();
+			FString Text = LOCTEXT("WaitingForRespawn", "YOU DIED").ToString();
 			FCanvasTextItem TextItem(FVector2D::ZeroVector, FText::GetEmpty(), BigFont, HUDDark);
 			TextItem.EnableShadow(FLinearColor::Black);
 			TextItem.Text = FText::FromString(Text);
 			TextItem.Scale = FVector2D(TextScale * ScaleUI, TextScale * ScaleUI);
 			TextItem.FontRenderInfo = ShadowedFont;
-			TextItem.SetColor(HUDLight);
+			TextItem.SetColor(FLinearColor::Red);
 			AddMatchInfoString(TextItem);
 		}
 
@@ -205,6 +226,75 @@ void ATheCovenHUD::DrawTimer()
 	{
 		DrawText("Timer: " + FString::FromInt(MyGameState->RemainingTime), FLinearColor::White, 5, HealthPosY + (HealthBar.VL - HealthIcon.VL) / 2.0f * ScaleUI, BigFont, ScaleUI, false);
 	}
+}
+
+bool ATheCovenHUD::ShowScoreboard(bool bEnable, bool bFocus)
+{
+	if (bIsScoreBoardVisible == bEnable)
+	{
+		// if the scoreboard is already enabled, disable it in favour of the new request
+		if (bEnable)
+		{
+			ToggleScoreboard();
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	if (bEnable)
+	{
+		AShooterPlayerController* ShooterPC = Cast<AShooterPlayerController>(PlayerOwner);
+		if (ShooterPC == NULL || ShooterPC->IsGameMenuVisible())
+		{
+			return false;
+		}
+	}
+
+	bIsScoreBoardVisible = bEnable;
+	if (bIsScoreBoardVisible)
+	{
+		/*
+		SAssignNew(ScoreboardWidgetOverlay, SOverlay)
+			+ SOverlay::Slot()
+			.HAlign(EHorizontalAlignment::HAlign_Center)
+			.VAlign(EVerticalAlignment::VAlign_Center)
+			.Padding(FMargin(50))
+			[
+				SAssignNew(ScoreboardWidget, SShooterScoreboardWidget)
+				.PCOwner(MakeWeakObjectPtr(PlayerOwner))
+			.MatchState(GetMatchState())
+			];
+
+		GEngine->GameViewport->AddViewportWidgetContent(
+			SAssignNew(ScoreboardWidgetContainer, SWeakWidget)
+			.PossiblyNullContent(ScoreboardWidgetOverlay));
+
+		if (bFocus)
+		{
+			// Give input focus to the scoreboard
+			FSlateApplication::Get().SetKeyboardFocus(ScoreboardWidget);
+		}
+		*/
+	}
+	else
+	{
+		if (ScoreboardWidgetContainer.IsValid())
+		{
+			if (GEngine && GEngine->GameViewport)
+			{
+				GEngine->GameViewport->RemoveViewportWidgetContent(ScoreboardWidgetContainer.ToSharedRef());
+			}
+		}
+
+		if (bFocus)
+		{
+			// Make sure viewport has focus
+			FSlateApplication::Get().SetAllUserFocusToGameViewport();
+		}
+	}
+	return true;
 }
 
 #undef LOCTEXT_NAMESPACE

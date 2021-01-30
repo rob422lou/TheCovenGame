@@ -109,7 +109,8 @@ public:
 	 * @param	bFocus	Give keyboard focus to the scoreboard.
 	 * @return	true, if the scoreboard visibility changed
 	 */
-	bool ShowScoreboard(bool bEnable, bool bFocus = false);
+	// @TheCoven
+	virtual bool ShowScoreboard(bool bEnable, bool bFocus = false);
 
 	/** 
 	 * Add death message.
