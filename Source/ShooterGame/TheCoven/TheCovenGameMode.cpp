@@ -151,15 +151,17 @@ void ATheCovenGameMode::DefaultTimer()
 
 		if (MyGameState->RemainingTime <= 0)
 		{
-			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("GameOver"));
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("GameOver"));
 
 			if (GetMatchState() == MatchState::WaitingPostMatch)
 			{
-				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Waiting Post Match"));
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("RestartMatch"));
 				RestartGame();
+
 			}
 			else if (GetMatchState() == MatchState::InProgress)
 			{
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Finish Match"));
 				FinishMatch();
 
 				// Send end round events
