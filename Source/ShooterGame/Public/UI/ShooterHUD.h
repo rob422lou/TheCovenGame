@@ -110,6 +110,7 @@ public:
 	 * @return	true, if the scoreboard visibility changed
 	 */
 	// @TheCoven
+
 	virtual bool ShowScoreboard(bool bEnable, bool bFocus = false);
 
 	/** 

@@ -22,5 +22,14 @@ class SHOOTERGAME_API ATheCovenHUD : public AShooterHUD
 	virtual void DrawHealth();
 	void DrawTimer();
 
+public:
 	virtual bool ShowScoreboard(bool bEnable, bool bFocus = false);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "The Coven|HUD")
+	void OnEndGameHUD(bool bWon);
+	void OnEndGameHUD_Implementation(bool bWon) {}
+
+	UFUNCTION(BlueprintNativeEvent, Category = "The Coven|HUD")
+	void OnCloseWinnerHUD();
+	void OnCloseWinnerHUD_Implementation() {}
 };

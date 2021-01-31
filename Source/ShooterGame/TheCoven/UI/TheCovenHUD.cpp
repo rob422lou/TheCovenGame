@@ -146,7 +146,7 @@ void ATheCovenHUD::DrawHUD()
 				NetModeDesc += FString::Printf(TEXT("\nVersion: %i, %s, %s\nFPS: %i\nPing: ---\nIn:	%s Kb/s\nOut:	%s Kb/s"), FNetworkVersion::GetNetworkCompatibleChangelist(), UTF8_TO_TCHAR(__DATE__), UTF8_TO_TCHAR(__TIME__), FMath::FloorToInt(1.f / GetWorld()->DeltaTimeSeconds), *InStr, *OutStr);
 			}
 
-			DrawDebugInfoString(NetModeDesc, Canvas->OrgX + (Offset * ScaleUI), Canvas->OrgY + (Offset * ScaleUI), true, true, HUDLight);
+			//DrawDebugInfoString(NetModeDesc, Canvas->OrgX + (Offset * ScaleUI), Canvas->OrgY + (Offset * ScaleUI), true, true, HUDLight);
 		}
 	}
 
@@ -235,6 +235,8 @@ bool ATheCovenHUD::ShowScoreboard(bool bEnable, bool bFocus)
 		// if the scoreboard is already enabled, disable it in favour of the new request
 		if (bEnable)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Hide Scoreboard"));
+			OnCloseWinnerHUD();
 			ToggleScoreboard();
 		}
 		else
@@ -255,6 +257,14 @@ bool ATheCovenHUD::ShowScoreboard(bool bEnable, bool bFocus)
 	bIsScoreBoardVisible = bEnable;
 	if (bIsScoreBoardVisible)
 	{
+		if (GetMatchState() == EShooterMatchState::Lost)
+		{
+			OnEndGameHUD(false);
+		}
+		else {
+			OnEndGameHUD(true);
+		}
+		//MediaPlayer->OpenUrl(UMediaPlayer::);
 		/*
 		SAssignNew(ScoreboardWidgetOverlay, SOverlay)
 			+ SOverlay::Slot()
@@ -280,6 +290,7 @@ bool ATheCovenHUD::ShowScoreboard(bool bEnable, bool bFocus)
 	}
 	else
 	{
+		OnCloseWinnerHUD();
 		if (ScoreboardWidgetContainer.IsValid())
 		{
 			if (GEngine && GEngine->GameViewport)

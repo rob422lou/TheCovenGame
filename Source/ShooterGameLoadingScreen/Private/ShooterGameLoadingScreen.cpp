@@ -86,6 +86,7 @@ public:
 		// the startup movie can be set up in DefaultGame.ini or in the project settings, and is no longer hard coded
 
 		/*
+		* // @TheCoven
 		if (IsMoviePlayerEnabled())
 		{
 			FLoadingScreenAttributes LoadingScreen;
