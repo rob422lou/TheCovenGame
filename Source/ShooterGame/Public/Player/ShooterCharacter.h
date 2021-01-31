@@ -167,16 +167,19 @@ class AShooterCharacter : public ACharacter
 	void LookUpAtRate(float Val);
 
 	/** player pressed start fire action */
-	void OnStartFire();
+	// @TheCoven
+	virtual void OnStartFire();
 
 	/** player released start fire action */
 	void OnStopFire();
 
 	/** player pressed targeting action */
-	void OnStartTargeting();
+	// @TheCoven
+	virtual void OnStartTargeting();
 
 	/** player released targeting action */
-	void OnStopTargeting();
+	// @TheCoven
+	virtual void OnStopTargeting();
 
 	/** player pressed next weapon action */
 	void OnNextWeapon();

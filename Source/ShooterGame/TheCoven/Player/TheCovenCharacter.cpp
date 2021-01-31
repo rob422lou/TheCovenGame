@@ -8,6 +8,10 @@
 ATheCovenCharacter::ATheCovenCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UTheCovenCharacterMovement>(ACharacter::CharacterMovementComponentName))
 {
+	GetMesh1P()->bOnlyOwnerSee = false;
+	GetMesh1P()->bOwnerNoSee = false;
+	GetMesh()->bOnlyOwnerSee = false;
+	GetMesh()->bOwnerNoSee = false;
 	MaxUseDistance = 2500.0f;
 }
 
@@ -32,6 +36,7 @@ void ATheCovenCharacter::OnCameraUpdate(const FVector& CameraLocation, const FRo
 		GetMesh1P()->SetRelativeRotation(PitchedMesh.Rotator());
 		return;
 	}
+
 	Super::OnCameraUpdate(CameraLocation, CameraRotation);
 }
 
@@ -441,4 +446,58 @@ void ATheCovenCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >&
 
 	// Replicate to everyone
 	DOREPLIFETIME(ATheCovenCharacter, bIsHidden);
+}
+
+void ATheCovenCharacter::OnStartFire_Implementation()
+{
+	if (GetLocalRole() < ROLE_Authority)
+	{
+		ServerOnStartFire();
+	}
+}
+
+void ATheCovenCharacter::ServerOnStartFire_Implementation()
+{
+	OnStartFire();
+}
+
+bool ATheCovenCharacter::ServerOnStartFire_Validate()
+{
+	return true;
+}
+
+void ATheCovenCharacter::OnStartTargeting_Implementation()
+{
+	if (GetLocalRole() < ROLE_Authority)
+	{
+		ServerOnStartTargeting();
+	}
+}
+
+void ATheCovenCharacter::ServerOnStartTargeting_Implementation()
+{
+	OnStartTargeting();
+}
+
+bool ATheCovenCharacter::ServerOnStartTargeting_Validate()
+{
+	return true;
+}
+
+void ATheCovenCharacter::OnStopTargeting_Implementation()
+{
+	if (GetLocalRole() < ROLE_Authority)
+	{
+		ServerOnStopTargeting();
+	}
+}
+
+void ATheCovenCharacter::ServerOnStopTargeting_Implementation()
+{
+	OnStopTargeting();
+}
+
+bool ATheCovenCharacter::ServerOnStopTargeting_Validate()
+{
+	return true;
 }
