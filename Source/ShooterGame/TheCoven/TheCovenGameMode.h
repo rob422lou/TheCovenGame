@@ -40,4 +40,17 @@ public:
 
 	/** update remaining time */
 	virtual void DefaultTimer() override;
+
+	/** notify about kills */
+	virtual void Killed(AController* Killer, AController* KilledPlayer, APawn* KilledPawn, const UDamageType* DamageType);
+
+	/** best player */
+	UPROPERTY(transient)
+	AShooterPlayerState* WinnerPlayerState;
+
+	/** check who won */
+	virtual void DetermineMatchWinner() override;
+
+	/** check if PlayerState is a winner */
+	virtual bool IsWinner(AShooterPlayerState* PlayerState) const override;
 };

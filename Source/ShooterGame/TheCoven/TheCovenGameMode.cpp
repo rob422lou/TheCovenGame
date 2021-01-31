@@ -7,6 +7,9 @@
 #include "Player/TheCovenCharacter.h"
 #include "TheCoven/TheCovenGameMode.h"
 
+// Witch team num == 0
+// Ghost team num == 1
+
 ATheCovenGameMode::ATheCovenGameMode(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnOb(TEXT("/Game/Blueprints/Pawns/TheCovenDefaultPlayerPawn"));
@@ -24,7 +27,8 @@ ATheCovenGameMode::ATheCovenGameMode(const FObjectInitializer& ObjectInitializer
 	PlayerControllerClass = ATheCovenPlayerController::StaticClass();
 
 	bAllowBots = false;
-	MinRespawnDelay = 2.0f;
+	bDelayedStart = true;
+	MinRespawnDelay = 2000.0f;
 }
 
 void ATheCovenGameMode::StartPlay()
@@ -127,16 +131,18 @@ void ATheCovenGameMode::DefaultTimer()
 	AShooterGameState* const MyGameState = Cast<AShooterGameState>(GameState);
 	if (GetWorld()->IsPlayInEditor())
 	{
+		/*
 		if (MyGameState && MyGameState->RemainingTime > 0 && !MyGameState->bTimerPaused)
 		{
 			MyGameState->RemainingTime--;
 		}
+		*/
 		// start match if necessary.
 		if (GetMatchState() == MatchState::WaitingToStart)
 		{
 			StartMatch();
 		}
-		return;
+		//return;
 	}
 
 	if (MyGameState && MyGameState->RemainingTime > 0 && !MyGameState->bTimerPaused)
@@ -145,8 +151,11 @@ void ATheCovenGameMode::DefaultTimer()
 
 		if (MyGameState->RemainingTime <= 0)
 		{
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("GameOver"));
+
 			if (GetMatchState() == MatchState::WaitingPostMatch)
 			{
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Waiting Post Match"));
 				RestartGame();
 			}
 			else if (GetMatchState() == MatchState::InProgress)
@@ -169,8 +178,91 @@ void ATheCovenGameMode::DefaultTimer()
 			}
 			else if (GetMatchState() == MatchState::WaitingToStart)
 			{
+				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Start New Match"));
 				StartMatch();
 			}
 		}
 	}
+}
+
+void ATheCovenGameMode::Killed(AController* Killer, AController* KilledPlayer, APawn* KilledPawn, const UDamageType* DamageType)
+{
+	Super::Killed(Killer, KilledPlayer, KilledPawn, DamageType);
+
+	AShooterGameState* MyGameState = CastChecked<AShooterGameState>(GameState);
+	int32 TeamDeaths = 0;
+	for (int32 i = 0; i < MyGameState->PlayerArray.Num(); i++)
+	{
+		AShooterPlayerState* PS = (AShooterPlayerState*)MyGameState->PlayerArray[i];
+		if (!PS) {
+			return;
+		}
+		const int32 PlayerDeaths = PS->GetDeaths();
+		
+		if (PS->GetTeamNum() == 1) {
+			if (PlayerDeaths >= 1)
+			{
+				MyGameState->RemainingTime = 1;
+			}
+		}
+		else {
+			TeamDeaths++;
+			if (TeamDeaths >=(MyGameState->PlayerArray.Num() - 1)) {
+				MyGameState->RemainingTime = 1;
+			}
+		}
+	}
+}
+
+void ATheCovenGameMode::DetermineMatchWinner()
+{
+	AShooterGameState* MyGameState = CastChecked<AShooterGameState>(GameState);
+	int32 BestScore = MIN_uint32;
+	int32 BestTeam = -1;
+	int32 NumBestTeams = 1;
+
+	int32 TeamDeaths = 0;
+	for (int32 i = 0; i < MyGameState->PlayerArray.Num(); i++)
+	{
+		AShooterPlayerState* PS = (AShooterPlayerState*)MyGameState->PlayerArray[i];
+		if (!PS) {
+			return;
+		}
+		const int32 PlayerDeaths = PS->GetDeaths();
+
+		if (PS->GetTeamNum() == 1) {
+			if (PlayerDeaths >= 1)
+			{
+				WinnerTeam = 0;
+			}
+		}
+		else {
+			TeamDeaths++;
+			if (TeamDeaths >= (MyGameState->PlayerArray.Num() - 1)) {
+				WinnerTeam = 1;
+			}
+		}
+	}
+
+	//WinnerTeam = (NumBestTeams == 1) ? BestTeam : NumTeams;
+
+	if (WinnerTeam == 0)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("DetermineMatchWinner Witch"));
+	}
+	else {
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("DetermineMatchWinner Ghost"));
+	}
+}
+
+bool ATheCovenGameMode::IsWinner(AShooterPlayerState* PlayerState) const
+{
+	if (PlayerState->GetTeamNum() == WinnerTeam)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Winner!"));
+	}
+	else {
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Loser"));
+	}
+	return PlayerState && !PlayerState->IsQuitter() && PlayerState->GetTeamNum() == WinnerTeam;
 }
