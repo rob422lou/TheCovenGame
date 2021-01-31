@@ -35,9 +35,11 @@ void ATheCovenHUD::DrawHUD()
 		FString Text;
 		if (GetMatchState() == EShooterMatchState::Lost)
 		{
+			//OnEndGameHUD(false);
 			Text = LOCTEXT("LoseState", "YOU LOSE! ").ToString();
 		}
 		else {
+			//OnEndGameHUD(true);
 			Text = LOCTEXT("WinState", "YOU WIN!").ToString();
 		}
 
@@ -47,7 +49,7 @@ void ATheCovenHUD::DrawHUD()
 		TextItem.Scale = FVector2D(TextScale * ScaleUI, TextScale * ScaleUI);
 		TextItem.FontRenderInfo = ShadowedFont;
 		TextItem.SetColor(FLinearColor::Red);
-		AddMatchInfoString(TextItem);
+		//AddMatchInfoString(TextItem);
 	}
 
 	if (MatchState == EShooterMatchState::Playing)
@@ -76,7 +78,7 @@ void ATheCovenHUD::DrawHUD()
 			TextItem.Scale = FVector2D(TextScale * ScaleUI, TextScale * ScaleUI);
 			TextItem.FontRenderInfo = ShadowedFont;
 			TextItem.SetColor(FLinearColor::Red);
-			AddMatchInfoString(TextItem);
+			//AddMatchInfoString(TextItem);
 		}
 
 		//DrawDeathMessages();
@@ -259,34 +261,13 @@ bool ATheCovenHUD::ShowScoreboard(bool bEnable, bool bFocus)
 	{
 		if (GetMatchState() == EShooterMatchState::Lost)
 		{
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Lost"));
 			OnEndGameHUD(false);
 		}
 		else {
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Won"));
 			OnEndGameHUD(true);
 		}
-		//MediaPlayer->OpenUrl(UMediaPlayer::);
-		/*
-		SAssignNew(ScoreboardWidgetOverlay, SOverlay)
-			+ SOverlay::Slot()
-			.HAlign(EHorizontalAlignment::HAlign_Center)
-			.VAlign(EVerticalAlignment::VAlign_Center)
-			.Padding(FMargin(50))
-			[
-				SAssignNew(ScoreboardWidget, SShooterScoreboardWidget)
-				.PCOwner(MakeWeakObjectPtr(PlayerOwner))
-			.MatchState(GetMatchState())
-			];
-
-		GEngine->GameViewport->AddViewportWidgetContent(
-			SAssignNew(ScoreboardWidgetContainer, SWeakWidget)
-			.PossiblyNullContent(ScoreboardWidgetOverlay));
-
-		if (bFocus)
-		{
-			// Give input focus to the scoreboard
-			FSlateApplication::Get().SetKeyboardFocus(ScoreboardWidget);
-		}
-		*/
 	}
 	else
 	{

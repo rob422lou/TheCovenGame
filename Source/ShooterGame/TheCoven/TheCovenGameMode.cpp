@@ -151,7 +151,7 @@ void ATheCovenGameMode::DefaultTimer()
 
 		if (MyGameState->RemainingTime <= 0)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("GameOver"));
+			//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("GameOver"));
 
 			if (GetMatchState() == MatchState::WaitingPostMatch)
 			{
